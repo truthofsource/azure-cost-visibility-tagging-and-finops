@@ -123,6 +123,10 @@ Open [the local reference](http://127.0.0.1:8143). Figures and resources are fic
 
 </details>
 
+## Troubleshooting Lessons
+
+Paused applications still incurred private-endpoint charges. The cost pause preserved a production dependency hosted in the nonproduction environment and retained the information needed to restore testing. [Read the incident, evidence and verification](docs/LESSONS-LEARNED.md).
+
 ## Guides
 
 - [Implementation and evidence boundaries](docs/IMPLEMENTATION.md)
