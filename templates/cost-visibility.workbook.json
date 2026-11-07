@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Insights/workbooks",
+      "apiVersion": "2022-04-01",
+      "name": "00000000-0000-4000-8000-000000000010",
+      "location": "eastus2",
+      "kind": "shared",
+      "properties": {
+        "displayName": "Workforce Services cost visibility",
+        "category": "workbook",
+        "sourceId": "Azure Monitor",
+        "serializedData": "{\"version\":\"Notebook/1.0\",\"items\":[{\"type\":1,\"name\":\"overview\",\"content\":{\"json\":\"# Workforce Services cost visibility\\nMonthly budget versus Azure's latest reported spend. Budgets trigger alerts; they do not cap charges. Cost data can arrive hours after usage. For daily trend and breakdowns, open **Cost Management \\u2192 Cost analysis** in each subscription and select the shared view **Workforce Services cost visibility**. Its pivots show service, resource group, and meter category.\"}},{\"type\":3,\"name\":\"budget-hub\",\"content\":{\"version\":\"KqlItem/1.0\",\"title\":\"Hub \\u2014 monthly budget and reported spend\",\"query\":\"{\\\"version\\\":\\\"ARMEndpoint/1.0\\\",\\\"data\\\":null,\\\"headers\\\":[],\\\"method\\\":\\\"GET\\\",\\\"path\\\":\\\"/subscriptions/00000000-0000-0000-0000-000000000001/providers/Microsoft.Consumption/budgets/budget-example-hub-monthly\\\",\\\"urlParams\\\":[{\\\"key\\\":\\\"api-version\\\",\\\"value\\\":\\\"2024-08-01\\\"}],\\\"batchDisabled\\\":false,\\\"transformers\\\":[{\\\"type\\\":\\\"jsonpath\\\",\\\"settings\\\":{\\\"tablePath\\\":\\\"$\\\",\\\"columns\\\":[{\\\"path\\\":\\\"$.properties.amount\\\",\\\"columnid\\\":\\\"Monthly budget\\\",\\\"columnType\\\":\\\"number\\\"},{\\\"path\\\":\\\"$.properties.currentSpend.amount\\\",\\\"columnid\\\":\\\"Reported spend\\\",\\\"columnType\\\":\\\"number\\\"},{\\\"path\\\":\\\"$.properties.currentSpend.unit\\\",\\\"columnid\\\":\\\"Currency\\\",\\\"columnType\\\":\\\"string\\\"},{\\\"path\\\":\\\"$.properties.timePeriod.startDate\\\",\\\"columnid\\\":\\\"Period start\\\",\\\"columnType\\\":\\\"datetime\\\"}]}}]}\",\"queryType\":12,\"size\":0,\"visualization\":\"table\"}},{\"type\":3,\"name\":\"budget-nonproduction\",\"content\":{\"version\":\"KqlItem/1.0\",\"title\":\"Nonproduction \\u2014 monthly budget and reported spend\",\"query\":\"{\\\"version\\\":\\\"ARMEndpoint/1.0\\\",\\\"data\\\":null,\\\"headers\\\":[],\\\"method\\\":\\\"GET\\\",\\\"path\\\":\\\"/subscriptions/00000000-0000-0000-0000-000000000002/providers/Microsoft.Consumption/budgets/budget-example-platform-nonproduction-monthly\\\",\\\"urlParams\\\":[{\\\"key\\\":\\\"api-version\\\",\\\"value\\\":\\\"2024-08-01\\\"}],\\\"batchDisabled\\\":false,\\\"transformers\\\":[{\\\"type\\\":\\\"jsonpath\\\",\\\"settings\\\":{\\\"tablePath\\\":\\\"$\\\",\\\"columns\\\":[{\\\"path\\\":\\\"$.properties.amount\\\",\\\"columnid\\\":\\\"Monthly budget\\\",\\\"columnType\\\":\\\"number\\\"},{\\\"path\\\":\\\"$.properties.currentSpend.amount\\\",\\\"columnid\\\":\\\"Reported spend\\\",\\\"columnType\\\":\\\"number\\\"},{\\\"path\\\":\\\"$.properties.currentSpend.unit\\\",\\\"columnid\\\":\\\"Currency\\\",\\\"columnType\\\":\\\"string\\\"},{\\\"path\\\":\\\"$.properties.timePeriod.startDate\\\",\\\"columnid\\\":\\\"Period start\\\",\\\"columnType\\\":\\\"datetime\\\"}]}}]}\",\"queryType\":12,\"size\":0,\"visualization\":\"table\"}},{\"type\":3,\"name\":\"budget-production\",\"content\":{\"version\":\"KqlItem/1.0\",\"title\":\"Production \\u2014 monthly budget and reported spend\",\"query\":\"{\\\"version\\\":\\\"ARMEndpoint/1.0\\\",\\\"data\\\":null,\\\"headers\\\":[],\\\"method\\\":\\\"GET\\\",\\\"path\\\":\\\"/subscriptions/00000000-0000-0000-0000-000000000003/providers/Microsoft.Consumption/budgets/budget-workforce-production-monthly\\\",\\\"urlParams\\\":[{\\\"key\\\":\\\"api-version\\\",\\\"value\\\":\\\"2024-08-01\\\"}],\\\"batchDisabled\\\":false,\\\"transformers\\\":[{\\\"type\\\":\\\"jsonpath\\\",\\\"settings\\\":{\\\"tablePath\\\":\\\"$\\\",\\\"columns\\\":[{\\\"path\\\":\\\"$.properties.amount\\\",\\\"columnid\\\":\\\"Monthly budget\\\",\\\"columnType\\\":\\\"number\\\"},{\\\"path\\\":\\\"$.properties.currentSpend.amount\\\",\\\"columnid\\\":\\\"Reported spend\\\",\\\"columnType\\\":\\\"number\\\"},{\\\"path\\\":\\\"$.properties.currentSpend.unit\\\",\\\"columnid\\\":\\\"Currency\\\",\\\"columnType\\\":\\\"string\\\"},{\\\"path\\\":\\\"$.properties.timePeriod.startDate\\\",\\\"columnid\\\":\\\"Period start\\\",\\\"columnType\\\":\\\"datetime\\\"}]}}]}\",\"queryType\":12,\"size\":0,\"visualization\":\"table\"}},{\"type\":1,\"name\":\"interpretation\",\"content\":{\"json\":\"A blank row can indicate missing Cost Management permissions or delayed data; it does not mean zero spend. Open each subscription's Cost analysis for the authoritative breakdown. This workbook does not query Cost Management Usage on every page load.\"}}],\"isLocked\":false,\"fallbackResourceIds\":[\"Azure Monitor\"]}"
+      },
+      "tags": {
+        "environment": "hub",
+        "workload": "cost-visibility",
+        "owner": "workforce",
+        "managed_by": "arm-template",
+        "data_class": "internal",
+        "cost_center": "operations"
+      }
+    }
+  ]
+}

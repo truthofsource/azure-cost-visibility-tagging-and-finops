@@ -1,0 +1,58 @@
+{
+  "notice": "All reported costs and resources below are fictional; not current Azure spend.",
+  "budgets": [
+    {
+      "scope": "Hub",
+      "budget": "50",
+      "reported": "12",
+      "forecast": "24",
+      "currency": "USD"
+    },
+    {
+      "scope": "Nonproduction",
+      "budget": "200",
+      "reported": "230",
+      "forecast": "260",
+      "currency": "USD"
+    },
+    {
+      "scope": "Production",
+      "budget": "100",
+      "reported": "84",
+      "forecast": "118",
+      "currency": "USD"
+    }
+  ],
+  "resources": [
+    {
+      "name": "Private worker",
+      "tags": {
+        "environment": "nonproduction",
+        "workload": "imports",
+        "owner": "platform-team",
+        "managed_by": "terraform",
+        "data_class": "internal",
+        "criticality": "medium",
+        "cost_center": "operations"
+      }
+    },
+    {
+      "name": "Cost workbook example",
+      "tags": {
+        "environment": "hub",
+        "workload": "cost-visibility",
+        "owner": "platform-team",
+        "managed_by": "arm-template",
+        "data_class": "internal",
+        "cost_center": "operations"
+      }
+    },
+    {
+      "name": "Unowned lab disk",
+      "tags": {
+        "environment": "nonproduction",
+        "workload": "lab"
+      }
+    }
+  ]
+}

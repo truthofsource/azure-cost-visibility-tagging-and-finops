@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2019-05-01",
+      "name": "logic-example-budget-review-only",
+      "location": "eastus2",
+      "properties": {
+        "state": "Disabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "requestedResources": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "actions": {
+            "Review_Only": {
+              "type": "Compose",
+              "inputs": {
+                "mode": "review_only",
+                "requestedResources": "@triggerBody()?['requestedResources']",
+                "message": "No resource action is implemented. Authenticate, validate and review an exact allowlist before designing any executor."
+              },
+              "runAfter": {}
+            }
+          },
+          "outputs": {}
+        }
+      }
+    }
+  ]
+}

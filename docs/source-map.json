@@ -1,0 +1,88 @@
+{
+  "description": "Actual source hashes before public adaptations. New offline models and disabled Logic App design are identified separately.",
+  "files": [
+    {
+      "source": "scripts/build_cost_visibility_workbook.py",
+      "sourceSha256": "5b0806ab4233d5554809f5c016632bf6cf1a73485e6d3affe9ba2313d0c9c893",
+      "publicFile": "scripts/build_cost_visibility_workbook.py",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels."
+      ]
+    },
+    {
+      "source": "scripts/ensure_cost_visibility_views.py",
+      "sourceSha256": "4d3e755a1253f55be708f9843b7fb5a52ea6d5a5326cfa48e54dc04a324b88af",
+      "publicFile": "reference/ensure_cost_visibility_views.py",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels."
+      ]
+    },
+    {
+      "source": "infra/modules/governance/main.tf",
+      "sourceSha256": "4b5cd07ae1937ededf87d28386270a44bf41970598e5ce14817b5eb2eae1fef3",
+      "publicFile": "infra/governance/main.tf",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels."
+      ]
+    },
+    {
+      "source": "infra/modules/governance/variables.tf",
+      "sourceSha256": "180aae09c7c1adf6c667502c05b7b8e2569ba94d776a6368604b6516432b2932",
+      "publicFile": "infra/governance/variables.tf",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels."
+      ]
+    },
+    {
+      "source": "infra/modules/governance/outputs.tf",
+      "sourceSha256": "a4bb3512c7149f7e8231dc6f7c574328dcd99ac2aa88130cf51b645a88a2aad7",
+      "publicFile": "infra/governance/outputs.tf",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels."
+      ]
+    },
+    {
+      "source": "infra/modules/governance/versions.tf",
+      "sourceSha256": "2aff0c3e7457d824a8a8402684a1301c60b2f200ab13dded3396d668c9506556",
+      "publicFile": "infra/governance/versions.tf",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels."
+      ]
+    },
+    {
+      "source": "infra/platform/production/main.tf",
+      "sourceSha256": "bc643900b5b16e33e3227e5d7a4bfca602c298bd67872e8d0c7b8c498191e7c8",
+      "publicFile": "reference/infra/common-tags.tf",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels.",
+        "Selected source extraction; context and public bindings described in SOURCE-MAP.md."
+      ]
+    },
+    {
+      "source": "infra/platform/production/policy.tf",
+      "sourceSha256": "0cafce3c80f2ca0ab2d373e9ca475c6da66602475167167b21829f7155faa6a5",
+      "publicFile": "reference/infra/production-budget.tf",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels."
+      ]
+    },
+    {
+      "source": "infra/platform/backstage/low-cost-vm.tf",
+      "sourceSha256": "064d1ec637d97d794368e50fc2a979743eaed4b12a1a489e0a165e6a3559c117",
+      "publicFile": "reference/infra/vm-shutdown.tf",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels.",
+        "Selected source extraction; context and public bindings described in SOURCE-MAP.md."
+      ]
+    },
+    {
+      "source": "infra/platform/production/policy.tf",
+      "sourceSha256": "0cafce3c80f2ca0ab2d373e9ca475c6da66602475167167b21829f7155faa6a5",
+      "publicFile": "infra/cost-controls/budget.tf",
+      "adaptations": [
+        "Fictional organization, subscription, workbook and resource labels.",
+        "Selected source extraction; context and public bindings described in SOURCE-MAP.md."
+      ]
+    }
+  ]
+}
