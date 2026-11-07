@@ -2,7 +2,7 @@
 
 **See where cloud money goes, who owns each resource and what to review before reducing costs.**
 
-[Business problem](#the-business-problem) · [Strengths](#engineering-strengths) · [What was built](#what-was-built) · [Shutdown design](#logic-app-shutdown-design) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md)
+[Business problem](#the-business-problem) · [Strengths](#engineering-strengths) · [What was built](#what-was-built) · [Shutdown design](#logic-app-shutdown-design) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md) · [Step by step](#step-by-step)
 
 ![Local cost reference using fictional figures](docs/images/01-costs.png)
 
@@ -17,6 +17,18 @@ I needed a clear view of spending across live services, test environments and sh
 I brought the existing budgets into one Azure dashboard and kept detailed spending breakdowns in Azure Cost Management. Resource tags—labels such as owner, environment and cost center—help connect charges to the responsible team.
 
 **Business outcome:** Engineers can investigate spending before changing services. Budget alerts prompt a review; they do not stop spending automatically. The public examples use fictional costs.
+
+## Step by Step
+
+A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
+
+1. **Read the spending overview** — The dashboard shows existing budgets and reported spending. Detailed Azure views help explain which services contribute to the bill.
+
+2. **Find the responsible owner** — Resource labels identify the environment, purpose and owner. Missing labels are reported so someone can investigate them.
+
+3. **Review the cost action** — An alert prompts a review of the resource and its dependencies. A test environment label alone does not mean that a resource is safe to stop.
+
+4. **Separate reporting from shutdown** — The budget-triggered shutdown example remains a disabled design. Real changes require their own checks and recovery plan, and retained resources may still incur charges.
 
 ## Engineering Strengths
 
