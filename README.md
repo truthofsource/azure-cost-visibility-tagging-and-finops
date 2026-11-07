@@ -18,13 +18,26 @@ I brought the existing budgets into one Azure dashboard and kept detailed spendi
 
 **Business outcome:** Engineers can investigate spending before changing services. Budget alerts prompt a review; they do not stop spending automatically. The public examples use fictional costs.
 
+## Tools Used and What They Do
+
+| Tool or service | What it does | Where it fits |
+| --- | --- | --- |
+| Azure Cost Management | Inspect actual reported spend, saved views and budgets. | Actual billing/visibility service; Resource Graph is not a replacement for spend data. |
+| Azure Monitor Workbooks | Display the existing budget information in one view. | Actual workbook design; no new cost-ingestion pipeline is implied. |
+| Azure Resource Graph | Find resources and their ownership/tag metadata. | Inventory query service, not an authoritative billing meter. |
+| Azure Policy | Evaluate selected configuration/tagging expectations. | Policy effect and enforcement mode must be read; a name does not prove enforcement. |
+| Python, Azure CLI and Terraform | Build/check views and describe related configuration. | Source/operating utilities; local checks do not refresh a private invoice. |
+| Logic Apps | Represent the proposed budget-triggered shutdown sequence. | Design only; automatic shutdown is not deployed by this reference. |
+
+Stopping compute and removing a private endpoint have different billing and recovery consequences. GitHub Actions validation is manual-only and does not change budgets or power states.
+
 ## Step by Step
 
 A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
 
-1. **Read the spending overview** — The dashboard shows existing budgets and reported spending. Detailed Azure views help explain which services contribute to the bill.
+1. **Read the spending overview (Cost Management and Workbooks)** — The dashboard shows existing budgets and reported spending. Detailed Azure views help explain which services contribute to the bill.
 
-2. **Find the responsible owner** — Resource labels identify the environment, purpose and owner. Missing labels are reported so someone can investigate them.
+2. **Find the responsible owner (Resource Graph and tags)** — Resource labels identify the environment, purpose and owner. Missing labels are reported so someone can investigate them.
 
 3. **Review the cost action** — An alert prompts a review of the resource and its dependencies. A test environment label alone does not mean that a resource is safe to stop.
 
