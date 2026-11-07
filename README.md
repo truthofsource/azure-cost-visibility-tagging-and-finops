@@ -8,22 +8,22 @@
 
 ## The Business Problem
 
-A platform spans production, nonproduction and shared services. A single bill does not explain which environment is driving spend, who owns a resource or why charges continue after an application is paused. Missing tags make that investigation harder. Automatically stopping everything in a nonproduction subscription could also interrupt shared production dependencies.
+The platform has live services, test environments and shared services. A single bill does not explain which environment is driving spend, who owns a resource or why charges continue after an application is paused. Missing tags make that investigation harder. Automatically stopping everything in a nonproduction subscription could also interrupt shared production dependencies.
 
 ## The Solution
 
-Bring existing subscription budgets into one Azure Monitor workbook, keep detailed daily analysis in native Cost Management views and apply a consistent resource-tag vocabulary. Use actual and forecast alerts to prompt review. Keep resource shutdown separate from reporting, with an explicit allowlist and recovery plan before any future budget-triggered automation.
+Bring existing subscription budgets into one Azure Monitor workbook, keep detailed daily analysis in native Cost Management views and use consistent tags to identify resources and their owners. Use actual and forecast alerts to prompt review. Keep resource shutdown separate from reporting, with an explicit allowlist and recovery plan before any future budget-triggered automation.
 
-**Business outcome:** Engineers can compare reported spend with the correct environment budget, find an owner and investigate a cost driver before changing capacity or stopping services. No savings percentage or current bill is inferred from the public example.
+**Business outcome:** Engineers can compare reported spend with the correct environment budget, find an owner and investigate a cost driver before changing capacity or stopping services. The public example uses fictional spending figures and does not claim measured savings.
 
 ## Engineering Strengths
 
 | Strength | Practical value |
 | --- | --- |
 | **Uses existing budget data** | The workbook reads budget resources rather than adding a second log workspace or a new ingestion pipeline just to display costs. |
-| **Separates actual from forecast** | Alerts at 50/80/100% actual and 90% forecast have different meanings; a friendly label cannot substitute for the saved threshold type. |
+| **Separates actual from forecast** | Alerts at 50%, 80% and 100% of actual spending differ from a 90% forecast alert. The saved alert type determines which one applies. |
 | **Makes ownership visible** | Seven common tag keys connect an environment, workload, owner and cost center with operational context. |
-| **Keeps policy behavior explicit** | The actual tag/location assignments evaluate compliance with enforcement disabled. They do not silently block deployments or repair tags. |
+| **Keeps policy behavior explicit** | The tag and location policies report compliance with enforcement disabled. They do not silently block deployments or repair tags. |
 | **Protects existing views** | The saved-view helper checks existing views and refuses mismatches instead of overwriting them. |
 | **Keeps cost actions scoped** | The proposed shutdown model rejects shared dependencies, production resources, stale observations and active work; it never executes a stop. |
 
@@ -31,13 +31,13 @@ Bring existing subscription budgets into one Azure Monitor workbook, keep detail
 
 ```mermaid
 flowchart LR
-  Budgets[Existing subscription budgets] --> Workbook[ARM budget reads in shared workbook]
+  Budgets[Existing subscription budgets] --> Workbook[Budget data in shared workbook]
   Billing[Azure cost records] --> Views[Daily native Cost Analysis views]
   Tags[Terraform common tags] --> Ownership[Owner and cost-center context]
   Policy[Policy with enforcement disabled] --> Gaps[Missing-tag review]
   Budgets --> Alerts[Actual and forecast notifications]
   Alerts -. Proposed only .-> Logic[Disabled Logic App review design]
-  Logic -. No executor included .-> Review[Explicit allowlist and operator review]
+  Logic -. No shutdown action included .-> Review[Explicit allowlist and operator review]
 ```
 
 A budget is an alert threshold, not a spending cap. The workbook does not grant cost access, change budgets or stop resources. Resource Graph inventory helps find resources and tags; it does not supply their billed spend.
@@ -46,11 +46,11 @@ A budget is an alert threshold, not a spending cap. The workbook does not grant 
 
 | Component | Status and purpose | Source |
 | --- | --- | --- |
-| Shared cost workbook builder | Actual implementation; three budget panels and clear reported-spend wording | [Builder](scripts/build_cost_visibility_workbook.py), [example ARM output](templates/cost-visibility.workbook.json) |
-| Native saved-view helper | Actual implementation; daily actual cost, budget KPI and service/group/meter pivots | [Helper](reference/ensure_cost_visibility_views.py) |
-| Monthly budget alerts | Actual extracted Terraform; public wrapper defaults Off | [Budget](infra/cost-controls/budget.tf) |
-| Tag/location policy | Actual reusable module; `enforce=false` | [Governance](infra/governance/main.tf) |
-| Common tagging pattern | Actual seven-key source pattern, with fictional labels | [Tags](reference/infra/common-tags.tf) |
+| Shared cost workbook builder | Implemented builder with three budget panels and clear spending labels | [Builder](scripts/build_cost_visibility_workbook.py), [example ARM output](templates/cost-visibility.workbook.json) |
+| Native saved-view helper | Implemented helper for daily spending, budget indicators and grouping by service, resource group or billing meter | [Helper](reference/ensure_cost_visibility_views.py) |
+| Monthly budget alerts | Terraform from the implementation; the public example defaults Off | [Budget](infra/cost-controls/budget.tf) |
+| Tag/location policy | Reusable module with enforcement disabled (`enforce=false`) | [Governance](infra/governance/main.tf) |
+| Common tagging pattern | Seven standard tag keys, with fictional values | [Tags](reference/infra/common-tags.tf) |
 | Scheduled VM shutdown | Actual source reference; daily 8 PM Central, without automatic startup | [VM schedule](reference/infra/vm-shutdown.tf) |
 | Budget-triggered Logic App shutdown | Deferred design represented by a disabled review-only template and new local planning model | [Design](design/logic-app-shutdown-review.json), [guards](scripts/finops_reference.py) |
 
@@ -60,7 +60,7 @@ The original budget-triggered shutdown idea remained deferred. It is included he
 
 ![Disabled shutdown planning and protected scenarios](docs/images/03-shutdown.png)
 
-The proposed sequence is budget alert → authenticated event → current resource/dependency check → exact allowlist → reviewed action → verified result and recovery record. The included Logic App is Disabled and contains only a Compose action; no webhook wiring, stop action, identity grant or executor is commissioned. Even the fictional eligible plan returns `execute: false`.
+The proposed sequence is budget alert → authenticated event → current resource/dependency check → exact allowlist → reviewed action → verified result and recovery record. The included Logic App is Disabled and contains only a Compose action; it has no connected webhook, stop action, access grant or shutdown code. Even the fictional eligible plan returns `execute: false`.
 
 The separate implemented VM schedule is a different control. Neither a budget email nor a schedule creates a universal cost cap. Stopped-but-allocated VMs can still incur compute charges; deallocation also leaves disk and other retained-resource charges. [Shutdown boundaries](docs/SHUTDOWN-DESIGN.md).
 
@@ -76,7 +76,7 @@ python -B scripts/build_cost_visibility_workbook.py --output .local-workbook.jso
 
 **Observed: 16 local tests passed.** The builder writes a local ARM file only. Tests check budget reads, saved-view behavior, missing data, tag gaps and disabled shutdown planning. They do not query Azure billing or change resources. [Validation](docs/VALIDATION.md).
 
-### 2. Inspect tag coverage honestly
+### 2. Check which tags are included
 
 ![Fictional tag coverage and source gap](docs/images/02-tags.png)
 
