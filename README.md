@@ -1,6 +1,6 @@
 # Azure Cost Visibility, Tagging and FinOps
 
-**Make cloud spending understandable, connect resources to owners and review cost actions before disrupting services.**
+**See where cloud money goes, who owns each resource and what to review before reducing costs.**
 
 [Business problem](#the-business-problem) · [Strengths](#engineering-strengths) · [What was built](#what-was-built) · [Shutdown design](#logic-app-shutdown-design) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md)
 
@@ -8,63 +8,68 @@
 
 ## The Business Problem
 
-The platform has live services, test environments and shared services. A single bill does not explain which environment is driving spend, who owns a resource or why charges continue after an application is paused. Missing tags make that investigation harder. Automatically stopping everything in a nonproduction subscription could also interrupt shared production dependencies.
+A cloud bill shows charges, but it does not always explain which system caused them or who should investigate. Costs can also continue after an application is paused.
+
+I needed a clear view of spending across live services, test environments and shared services. Cost reductions also needed care: a resource in a test subscription might still support a live service.
 
 ## The Solution
 
-Bring existing subscription budgets into one Azure Monitor workbook, keep detailed daily analysis in native Cost Management views and use consistent tags to identify resources and their owners. Use actual and forecast alerts to prompt review. Keep resource shutdown separate from reporting, with an explicit allowlist and recovery plan before any future budget-triggered automation.
+I brought the existing budgets into one Azure dashboard and kept detailed spending breakdowns in Azure Cost Management. Resource tags—labels such as owner, environment and cost center—help connect charges to the responsible team.
 
-**Business outcome:** Engineers can compare reported spend with the correct environment budget, find an owner and investigate a cost driver before changing capacity or stopping services. The public example uses fictional spending figures and does not claim measured savings.
+**Business outcome:** Engineers can investigate spending before changing services. Budget alerts prompt a review; they do not stop spending automatically. The public examples use fictional costs.
 
 ## Engineering Strengths
 
-| Strength | Practical value |
+| Design choice | Practical benefit |
 | --- | --- |
-| **Uses existing budget data** | The workbook reads budget resources rather than adding a second log workspace or a new ingestion pipeline just to display costs. |
-| **Separates actual from forecast** | Alerts at 50%, 80% and 100% of actual spending differ from a 90% forecast alert. The saved alert type determines which one applies. |
-| **Makes ownership visible** | Seven common tag keys connect an environment, workload, owner and cost center with operational context. |
-| **Keeps policy behavior explicit** | The tag and location policies report compliance with enforcement disabled. They do not silently block deployments or repair tags. |
-| **Protects existing views** | The saved-view helper checks existing views and refuses mismatches instead of overwriting them. |
-| **Keeps cost actions scoped** | The proposed shutdown model rejects shared dependencies, production resources, stale observations and active work; it never executes a stop. |
+| Reuse existing budget information | Avoid another data collection system just to show costs. |
+| Label resources consistently | Make it easier to find an owner and understand a resource's purpose. |
+| Separate recorded spending from forecasts | Help readers distinguish charges already reported from estimates of future spending. |
+| Report missing tags without blocking changes | Give owners a chance to correct gaps without unexpected service disruption. |
+| Review shutdown plans separately | Avoid stopping a shared or busy service just because a budget alert arrived. |
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-  Budgets[Existing subscription budgets] --> Workbook[Budget data in shared workbook]
-  Billing[Azure cost records] --> Views[Daily native Cost Analysis views]
-  Tags[Terraform common tags] --> Ownership[Owner and cost-center context]
-  Policy[Policy with enforcement disabled] --> Gaps[Missing-tag review]
-  Budgets --> Alerts[Actual and forecast notifications]
-  Alerts -. Proposed only .-> Logic[Disabled Logic App review design]
-  Logic -. No shutdown action included .-> Review[Explicit allowlist and operator review]
+  Budgets[Existing budgets] --> Dashboard[Shared cost dashboard]
+  Costs[Azure spending records] --> Details[Detailed spending views]
+  Labels[Resource labels] --> Owners[Owner and business purpose]
+  Budgets --> Alert[Spending alert]
+  Alert -. Proposed only .-> Review[Review a possible shutdown]
 ```
 
-A budget is an alert threshold, not a spending cap. The workbook does not grant cost access, change budgets or stop resources. Resource Graph inventory helps find resources and tags; it does not supply their billed spend.
+FinOps means managing cloud spending with both business and engineering needs in mind. A budget is an alert threshold, not a spending limit.
 
 ## What Was Built
 
-| Component | Status and purpose | Source |
+| Part | What it does | Details |
 | --- | --- | --- |
-| Shared cost workbook builder | Implemented builder with three budget panels and clear spending labels | [Builder](scripts/build_cost_visibility_workbook.py), [example ARM output](templates/cost-visibility.workbook.json) |
-| Native saved-view helper | Implemented helper for daily spending, budget indicators and grouping by service, resource group or billing meter | [Helper](reference/ensure_cost_visibility_views.py) |
-| Monthly budget alerts | Terraform from the implementation; the public example defaults Off | [Budget](infra/cost-controls/budget.tf) |
-| Tag/location policy | Reusable module with enforcement disabled (`enforce=false`) | [Governance](infra/governance/main.tf) |
-| Common tagging pattern | Seven standard tag keys, with fictional values | [Tags](reference/infra/common-tags.tf) |
-| Scheduled VM shutdown | Actual source reference; daily 8 PM Central, without automatic startup | [VM schedule](reference/infra/vm-shutdown.tf) |
-| Budget-triggered Logic App shutdown | Deferred design represented by a disabled review-only template and new local planning model | [Design](design/logic-app-shutdown-review.json), [guards](scripts/finops_reference.py) |
+| Shared dashboard | Shows existing budgets and reported spending. | [Dashboard builder](scripts/build_cost_visibility_workbook.py) |
+| Detailed spending views | Breaks spending down by service and resource group. | [View setup](reference/ensure_cost_visibility_views.py) |
+| Budget alerts | Warns when recorded or forecast spending reaches chosen levels. | [Budget settings](infra/cost-controls/budget.tf) |
+| Resource labeling rules | Helps identify owners and missing labels. | [Rules](infra/governance/main.tf) and [labels](reference/infra/common-tags.tf) |
+| Daily server shutdown schedule | Provides a separate scheduled shutdown, with no automatic startup. | [Schedule](reference/infra/vm-shutdown.tf) |
+| Proposed budget-triggered shutdown | Demonstrates review rules without stopping anything. | [Design](design/logic-app-shutdown-review.json) |
 
 ## Logic App Shutdown Design
 
-The original budget-triggered shutdown idea remained deferred. It is included here as a **design and local dry run**, not a deployed solution.
+Azure Logic Apps connects scheduled tasks and events to processing steps. I explored using it to review a possible shutdown after a budget alert.
 
-![Disabled shutdown planning and protected scenarios](docs/images/03-shutdown.png)
+**This part remains a design, not working shutdown automation.** The example is disabled and cannot stop resources. A real implementation would need to verify the alert, check current dependencies and activity, identify exactly what may stop, and provide a recovery plan.
 
-The proposed sequence is budget alert → authenticated event → current resource/dependency check → exact allowlist → reviewed action → verified result and recovery record. The included Logic App is Disabled and contains only a Compose action; it has no connected webhook, stop action, access grant or shutdown code. Even the fictional eligible plan returns `execute: false`.
-
-The separate implemented VM schedule is a different control. Neither a budget email nor a schedule creates a universal cost cap. Stopped-but-allocated VMs can still incur compute charges; deallocation also leaves disk and other retained-resource charges. [Shutdown boundaries](docs/SHUTDOWN-DESIGN.md).
+Stopping a server also does not remove every charge: disks, storage and other retained resources can still cost money. [Design and safeguards](docs/SHUTDOWN-DESIGN.md).
 
 ## Proof It Works
+
+Recorded local checks covered the dashboard builder, resource labels and the proposed review rules: **16 tests passed**, plus **four infrastructure test cases using simulated Azure responses**.
+
+One useful finding remained visible: the dashboard's resource-label view included six of the seven common tag keys and omitted `criticality`, which describes how important a resource is. The project reports that gap rather than claiming complete coverage.
+
+The screenshots are local examples with fictional costs. These checks did not query a live bill or stop cloud services. [Full results](docs/VALIDATION.md).
+
+<details>
+<summary>For engineers: detailed results, examples and commands</summary>
 
 ### 1. Check the real builders and fictional decision models
 
@@ -103,6 +108,8 @@ python -B scripts/preview.py --port 8143
 ```
 
 Open [the local reference](http://127.0.0.1:8143). Figures and resources are fictional. Screenshots are actual local captures, not a fresh Azure cost report or portal acceptance test.
+
+</details>
 
 ## Guides
 
