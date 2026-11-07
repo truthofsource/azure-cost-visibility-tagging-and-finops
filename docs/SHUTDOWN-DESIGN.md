@@ -6,8 +6,8 @@
 | --- | --- |
 | Actual/forecast budget emails | Actual implementation source |
 | Backstage daily VM shutdown | Actual source reference, separate from budgets |
-| Budget-to-Action Group or webhook connection | Not commissioned here |
-| Logic App shutdown executor | Not implemented; deferred platform item |
+| Budget-to-Action Group or webhook connection | Not connected in this example |
+| Logic App code that stops resources | Not implemented; deferred platform item |
 | Disabled Compose-only Logic App | New public design example |
 | Allowlist decisions | New local model with fictional snapshots; every output has `execute: false` |
 
@@ -24,13 +24,13 @@ flowchart TD
   Executor --> Verify[Verify achieved state and record outcome]
 ```
 
-The included design does not implement Auth or Executor. It has no RBAC grants, ARM stop/deallocate HTTP action, active schedule or webhook registration. Its Compose output is not proof that a request is trusted. Do not activate it and assume the local guard is an authorization boundary.
+The included design does not implement event authentication or shutdown actions. It has no RBAC grants, ARM stop/deallocate HTTP action, active schedule or webhook registration. Its Compose output is not proof that a request is trusted. Turning it on would not add the missing authentication or permissions checks.
 
 ## Local pilot model
 
 The model defaults disabled. With an in-memory fictional pilot flag it considers only an Actual 100% event, an exact subscription and resource allowlist, a snapshot no older than five minutes, a nonproduction VM, no shared dependency and no active work. Its only eligible result is a proposed deallocation requiring review. Forecast alerts do not authorize a shutdown.
 
-Snapshot freshness does not make billing real time. Budget events can arrive after charges have accrued. The model does not authenticate webhooks, query Azure dependencies, persist duplicate-event handling, bind an approval, calculate a final invoice or perform recovery. Those remain requirements before any executor is designed or commissioned.
+Snapshot freshness does not make billing real time. Budget events can arrive after charges have accrued. The model does not authenticate webhooks, query Azure dependencies, persist duplicate-event handling, bind an approval, calculate a final invoice or perform recovery. Those remain requirements before real shutdown code can be implemented and used.
 
 ## Required safeguards for a real implementation
 

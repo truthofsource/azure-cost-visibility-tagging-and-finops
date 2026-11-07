@@ -20,3 +20,14 @@ Screenshots: [costs](images/01-costs.png), [tags](images/02-tags.png), [shutdown
 The tests cover template/view structure and the new fictional review models, not live billing arrival, Azure Policy compliance, notification delivery, actual resource dependencies or a shutdown executor. Terraform uses simulated responses. The deferred Logic App stays an undeployed design and contains no stop action.
 
 No workbook publish, budget update, recipient change, tag remediation, VM start/stop, Logic App activation or hosted GitHub run is performed. Historical records are dated context, not permission to repeat an earlier operation.
+
+## Wording and preview review - November 6, 2026
+
+The supporting guides and preview labels received another plain-language review.
+Screenshots were refreshed from the local fictional viewer. Desktop tabs loaded
+without browser errors, and the 390-pixel mobile view had no horizontal page
+overflow. External browser requests were blocked. HTML structure and embedded
+scripts remained unchanged; this pass changed text and screenshots only.
+
+These browser checks did not repeat cloud acceptance or the earlier code tests.
+No Azure service, Gmail account, provider session or hosted Actions run was used.
