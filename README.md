@@ -8,9 +8,11 @@
 
 ## The Business Problem
 
-A cloud bill shows charges, but it does not always explain which system caused them or who should investigate. Costs can also continue after an application is paused.
+The organization needs to explain cloud spending across production, testing and shared engineering services. A total bill does not identify which workload produced a charge, whether the resource is still needed or who can safely change it. Inconsistent resource labels make that investigation more manual.
 
-I needed a clear view of spending across live services, test environments and shared services. Cost reductions also needed care: a resource in a test subscription might still support a live service.
+Pausing an application does not stop every related charge: networking, storage, retained images and other supporting services may continue billing. A resource labelled nonproduction can also have a live dependency, so deleting it based on its name alone can interrupt production. Budget alerts arrive as information and do not impose a spending ceiling.
+
+The business need was usable cost visibility, reliable ownership labels and a deliberate shutdown review that reduces avoidable spending while preserving service dependencies and recovery data.
 
 ## The Solution
 
