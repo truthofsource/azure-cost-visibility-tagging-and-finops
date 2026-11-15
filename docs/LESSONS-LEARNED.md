@@ -34,4 +34,4 @@ The practical sequence is: identify the failing boundary, preserve safe correlat
 
 ## Related project details
 
-- [Private-networking dependency lesson](https://github.com/truthofsource/azure-private-networking/blob/main/docs/LESSONS-LEARNED.md)
+- [Private-networking dependency lesson](https://github.com/truthofsource/azure-hub-spoke-networking/blob/main/examples/private-access/docs/LESSONS-LEARNED.md)
