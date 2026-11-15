@@ -1,10 +1,12 @@
 # Azure Cost Visibility, Tagging and FinOps
 
+[![Cost visibility and tagging — illustrated overview](docs/diagrams/architecture.png)](docs/diagrams/architecture.svg)
+
+[View SVG](docs/diagrams/architecture.svg) · [Download PNG](docs/diagrams/architecture.png) · [Edit in draw.io](docs/diagrams/architecture.drawio)
+
 **See where cloud money goes, who owns each resource and what to review before reducing costs.**
 
 [Business problem](#the-business-problem) · [Strengths](#engineering-strengths) · [What was built](#what-was-built) · [Shutdown design](#logic-app-shutdown-design) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md) · [Step by step](#step-by-step)
-
-![Local cost reference using fictional figures](docs/images/01-costs.png)
 
 ## The Business Problem
 
@@ -150,7 +152,7 @@ Compare the observation period with disks, IPs, backups, logs, registry images a
 | Failure boundary | A meaningful denied, malformed, stale or failed case | Not yet recorded |
 | Recovery / cleanup | What you restored or removed and what remains billed | Not yet recorded |
 
-Capture your own architecture/configuration, one working result and one failure/recovery result. Keep tokens, credentials, personal records and private identifiers out of public screenshots. Existing portfolio images are references, not evidence that you performed these steps.
+Capture your own architecture/configuration, one working result and one failure/recovery result. Keep tokens, credentials, personal records and private identifiers out of public screenshots. The architecture diagram explains the design; record your own results rather than treating it as execution evidence.
 
 ### Troubleshooting order
 
@@ -196,14 +198,7 @@ A short walkthrough of the process, with technical instructions and evidence lim
 
 ## Architecture
 
-```mermaid
-flowchart LR
-  Budgets[Existing budgets] --> Dashboard[Shared cost dashboard]
-  Costs[Azure spending records] --> Details[Detailed spending views]
-  Labels[Resource labels] --> Owners[Owner and business purpose]
-  Budgets --> Alert[Spending alert]
-  Alert -. Proposed only .-> Review[Review a possible shutdown]
-```
+[View the illustrated project overview](docs/diagrams/architecture.svg).
 
 FinOps means managing cloud spending with both business and engineering needs in mind. A budget is an alert threshold, not a spending limit.
 
@@ -248,8 +243,6 @@ python -B scripts/build_cost_visibility_workbook.py --output .local-workbook.jso
 **Observed: 16 local tests passed.** The builder writes a local ARM file only. Tests check budget reads, saved-view behavior, missing data, tag gaps and disabled shutdown planning. They do not query Azure billing or change resources. [Validation](docs/VALIDATION.md).
 
 ### 2. Check which tags are included
-
-![Fictional tag coverage and source gap](docs/images/02-tags.png)
 
 The actual workbook builder includes six of the seven common keys and omits `criticality`. The public checks expose that gap; they do not claim every resource is compliant or silently alter the copied implementation. Resource tags do not automatically inherit from a resource group.
 

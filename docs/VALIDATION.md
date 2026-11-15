@@ -1,5 +1,7 @@
 # Validation and Evidence Limits
 
+> Placeholder screenshots were removed on November 15, 2026. Written test results below retain their original dates and scope; historical screenshot references describe earlier captures. Proper Azure and application screenshots are deferred. The illustrated architecture is a source-based explanation, not a live-service screenshot.
+
 Local checks completed November 6, 2026. No actual invoice or cloud resource was queried or changed for publication.
 
 | Check | Observed result | Limit |
@@ -15,7 +17,7 @@ Local checks completed November 6, 2026. No actual invoice or cloud resource was
 | Actionlint | Passed | Manual-only workflow not dispatched |
 | Trivy secret scan | No findings | Secret check, not a vulnerability clearance |
 
-Screenshots: [costs](images/01-costs.png), [tags](images/02-tags.png), [shutdown design](images/03-shutdown.png), [mobile](images/04-mobile.png).
+Screenshots: costs, tags, shutdown design, mobile.
 
 The tests cover template/view structure and the new fictional review models, not live billing arrival, Azure Policy compliance, notification delivery, actual resource dependencies or a shutdown executor. Terraform uses simulated responses. The deferred Logic App stays an undeployed design and contains no stop action.
 

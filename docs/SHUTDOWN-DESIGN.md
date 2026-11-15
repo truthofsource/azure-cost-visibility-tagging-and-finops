@@ -13,16 +13,15 @@
 
 ## Intended future sequence
 
-```mermaid
-flowchart TD
-  Alert[Budget notification] --> Auth[Authenticate event and validate scope]
-  Auth --> Fresh[Obtain current resource and dependency snapshot]
-  Fresh --> List[Match exact reviewed allowlist]
-  List --> Protect[Reject production, shared dependencies and active work]
-  Protect --> Review[Review exact action and recovery plan]
-  Review --> Executor[Future narrowly scoped executor]
-  Executor --> Verify[Verify achieved state and record outcome]
-```
+1. **Budget notification** → **Authenticate event and validate scope**.
+2. **Authenticate event and validate scope** → **Obtain current resource and dependency snapshot**.
+3. **Obtain current resource and dependency snapshot** → **Match exact reviewed allowlist**.
+4. **Match exact reviewed allowlist** → **Reject production, shared dependencies and active work**.
+5. **Reject production, shared dependencies and active work** → **Review exact action and recovery plan**.
+6. **Review exact action and recovery plan** → **Future narrowly scoped executor**.
+7. **Future narrowly scoped executor** → **Verify achieved state and record outcome**.
+
+[View the illustrated project overview](diagrams/architecture.svg).
 
 The included design does not implement event authentication or shutdown actions. It has no RBAC grants, ARM stop/deallocate HTTP action, active schedule or webhook registration. Its Compose output is not proof that a request is trusted. Turning it on would not add the missing authentication or permissions checks.
 
