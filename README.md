@@ -227,7 +227,7 @@ Recorded local checks covered the dashboard builder, resource labels and the pro
 
 One useful finding remained visible: the dashboard's resource-label view included six of the seven common tag keys and omitted `criticality`, which describes how important a resource is. The project reports that gap rather than claiming complete coverage.
 
-The screenshots are local examples with fictional costs. These checks did not query a live bill or stop cloud services. [Full results](docs/VALIDATION.md).
+The local examples use fictional costs; their placeholder captures have been removed. These checks did not query a live bill or stop cloud services. [Full results](docs/VALIDATION.md).
 
 <details>
 <summary>For engineers: detailed results, examples and commands</summary>
@@ -266,7 +266,7 @@ terraform -chdir=infra/governance test
 python -B scripts/preview.py --port 8143
 ```
 
-Open [the local reference](http://127.0.0.1:8143). Figures and resources are fictional. Screenshots are actual local captures, not a fresh Azure cost report or portal acceptance test.
+Open [the local reference](http://127.0.0.1:8143). Figures and resources are fictional. Proper Azure cost and portal screenshots are deferred.
 
 </details>
 
