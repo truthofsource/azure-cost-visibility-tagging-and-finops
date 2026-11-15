@@ -35,6 +35,19 @@ Stopping compute and removing a private endpoint have different billing and reco
 
 ## Step by Step
 
+Build an independent version with the [reader-operated walkthrough](docs/BUILD-YOUR-OWN.md). It gives prerequisites, working locations, numbered actions, source-derived commands, expected results, verification and cleanup.
+
+For this project, your working starting point is [`data/fictional.json`](data/fictional.json). Expected scope: A local cost/ownership review and generated workbook definition, not a deployed workbook or shutdown.
+
+1. **Create your own workspace.** Copy the project and record the source version before editing.
+2. **Prepare and run the baseline.** Use the documented runtimes and selected dependencies, then run the local checks.
+3. **Make your own change.** Edit a project-specific fixture, configuration or rule and rerun its positive and negative cases.
+4. **Verify and document your result.** Capture your own evidence and distinguish a local example from a live integration.
+5. **Extend and close out deliberately.** Plan any independent cloud work separately and clean up only what you created.
+
+<details>
+<summary>How the underlying platform process works</summary>
+
 A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
 
 1. **Read the spending overview (Cost Management and Workbooks)** — The dashboard shows existing budgets and reported spending. Detailed Azure views help explain which services contribute to the bill.
@@ -44,6 +57,8 @@ A short walkthrough of the process, with technical instructions and evidence lim
 3. **Review the cost action** — An alert prompts a review of the resource and its dependencies. A test environment label alone does not mean that a resource is safe to stop.
 
 4. **Separate reporting from shutdown** — The budget-triggered shutdown example remains a disabled design. Real changes require their own checks and recovery plan, and retained resources may still incur charges.
+
+</details>
 
 ## Engineering Strengths
 
