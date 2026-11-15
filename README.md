@@ -35,7 +35,7 @@ Stopping compute and removing a private endpoint have different billing and reco
 
 ## Step by Step
 
-Build an independent version with the [reader-operated walkthrough](docs/BUILD-YOUR-OWN.md). It gives prerequisites, working locations, numbered actions, source-derived commands, expected results, verification and cleanup.
+Build an independent version with the [step-by-step build guide](docs/BUILD-YOUR-OWN.md). It gives prerequisites, working locations, numbered actions, source-derived commands, expected results, verification and cleanup.
 
 For this project, your working starting point is [`data/fictional.json`](data/fictional.json). Expected scope: A local cost/ownership review and generated workbook definition, not a deployed workbook or shutdown.
 
